@@ -14,7 +14,46 @@ datasource db {
 }
 
 model User {
-  id            Int    @id @default(autoincrement())
-  username      String @unique
-  hash_password String
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  email     String   @unique
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order[]
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  product_name String
+  description  String   @unique
+  price        Decimal
+  quantity     Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Order        Order[]
+}
+
+model Order {
+  id          Int        @id @default(autoincrement())
+  orderData   DateTime   @default(now())
+  orderStatus OrdeStatus
+  product     Product    @relation(fields: [productId], references: [id])
+  productId   Int
+  user        User       @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+enum OrdeStatus {
+  ORDER_PLACED
+  ORDER_IN_PROGRESS
+  PREPARE_TO_SHIP
+  SHIPPED
+  DELIVERED
+}
+
+enum Role {
+  USER
+  ADMIN
 }
