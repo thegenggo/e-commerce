@@ -13,4 +13,14 @@ export class UsersService {
       },
     });
   }
+
+  async createUser(email: string, username: string, password: string): Promise<User | undefined> {
+    return this.prisma.user.create({
+      data: {
+        email: email,
+        username: username,
+        password: password,
+      },
+    });
+  }
 }
