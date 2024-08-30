@@ -27,8 +27,10 @@ export class AuthService {
 
   async signIn(username: string, password: string): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(username);
+    if (!user) throw new BadRequestException("Username or password is incorrect.");
+
     if (await !bcrypt.compare(password, user.password)) {
-      throw new UnauthorizedException();
+      throw new BadRequestException("Username or password is incorrect.");
     }
     const payload = { sub: user.id, username: user.username };
     return {
