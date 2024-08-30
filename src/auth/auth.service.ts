@@ -1,7 +1,8 @@
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -36,5 +37,13 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async changePassword(userId: number, newPassword: string): Promise<{ message: string }> {
+    const user = await this.usersService.changePassword(userId, await bcrypt.hash(newPassword, 10))
+    console.log("user: ", user);
+    return {
+      message: "Successfully changed password."
+    }
   }
 }

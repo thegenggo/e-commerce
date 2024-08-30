@@ -23,4 +23,15 @@ export class UsersService {
       },
     });
   }
+
+  async changePassword(id: number, newPassword: string): Promise<any> {
+    return this.prisma.user.update({
+        where: { 
+          id: id, 
+        },
+        data: {
+          password: newPassword,
+        },
+    });
+  }
 }
