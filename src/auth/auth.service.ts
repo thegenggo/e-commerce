@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +33,26 @@ export class AuthService {
     if (await !bcrypt.compare(password, user.password)) {
       throw new BadRequestException("Username or password is incorrect.");
     }
+
     const payload = { sub: user.id, username: user.username };
+    
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+  }
+
+  async signInOauth(user) : Promise<{ access_token: string }> {
+    if (!user) throw new BadRequestException('Unauthenticated');
+
+    let userExists: User =  await this.usersService.findOneByEmail(user.email);
+    console.log(userExists);
+
+    if (!userExists) {
+      userExists = await this.usersService.createUser(user.email, null, null);
+    }
+
+    const payload = { sub: userExists.id, email: userExists.email };
+
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
