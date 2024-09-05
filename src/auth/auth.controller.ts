@@ -18,6 +18,7 @@ import { SignInDto } from './dto/sign-in.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
+import { FacebookOauthGuard } from './guards/facebook-oauth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,12 +26,33 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  async auth() {}
+  async googleAuth() {}
 
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
   async googleAuthCallback(@Request() req, @Res({ passthrough: true }) res: Response) {
+    const token = await this.authService.signInOauth(req.user);
+
+    res.cookie('access_token', token, {
+      maxAge: 2592000000,
+      sameSite: true,
+      secure: false,
+    });
+
+    console.log(token);
+
+    return token;
+  }
+
+  @Get('facebook')
+  @UseGuards(FacebookOauthGuard)
+  async facebookAuth() {}
+
+
+  @Get('facebook/callback')
+  @UseGuards(FacebookOauthGuard)
+  async facebookAuthCallback(@Request() req, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.signInOauth(req.user);
 
     res.cookie('access_token', token, {
