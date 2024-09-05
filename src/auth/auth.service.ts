@@ -30,7 +30,8 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
     if (!user) throw new BadRequestException("Username or password is incorrect.");
 
-    if (await !bcrypt.compare(password, user.password)) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
       throw new BadRequestException("Username or password is incorrect.");
     }
 
@@ -59,6 +60,7 @@ export class AuthService {
   }
 
   async changePassword(userId: number, newPassword: string): Promise<{ message: string }> {
+    console.log("New password: ", newPassword);
     const user = await this.usersService.changePassword(userId, await bcrypt.hash(newPassword, 10))
     console.log("user: ", user);
     return {
