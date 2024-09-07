@@ -33,7 +33,6 @@ export class UsersService {
   }
 
   async changePassword(id: number, newPassword: string): Promise<any> {
-    console.log("New password: ", newPassword);
     return this.prisma.user.update({
         where: { 
           id: id, 

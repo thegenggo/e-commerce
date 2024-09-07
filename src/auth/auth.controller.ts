@@ -10,7 +10,6 @@ import {
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -19,6 +18,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
 import { FacebookOauthGuard } from './guards/facebook-oauth.guard';
+import { Public } from './auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -46,6 +46,7 @@ export class AuthController {
   }
 
   @Get('facebook')
+  @Public()
   @UseGuards(FacebookOauthGuard)
   async facebookAuth() {}
 
@@ -68,6 +69,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
+  @Public()
   @ApiCreatedResponse({ type: UserEntity })
   signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto.email, signUpDto.username, signUpDto.password);
@@ -75,12 +77,12 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
+  @Public()
   @ApiOkResponse({ type: UserEntity })
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('change-password')
   @ApiOkResponse({ type: UserEntity })
@@ -88,7 +90,6 @@ export class AuthController {
     return this.authService.changePassword(req.user.sub, changePasswordDto.password);
   }
 
-  @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;

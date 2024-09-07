@@ -21,7 +21,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
         refreshToken: string,
         profile: any,
         done: (error: any, user?: any, info?: any) => void
-    ) : Promise<void> {
+    ) : Promise<any> {
         const { id, name, emails, photos } = profile;
 
         const user = {

@@ -26,8 +26,8 @@ model User {
 
 model Product {
   id           Int      @id @default(autoincrement())
-  product_name String
-  description  String   @unique
+  productName  String
+  description  String?   @unique
   price        Decimal
   quantity     Int
   createdAt    DateTime @default(now())
