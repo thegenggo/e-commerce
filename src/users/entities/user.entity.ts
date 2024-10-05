@@ -22,4 +22,7 @@ export class UserEntity implements User {
 
     @ApiProperty()
     updatedAt: Date;
+
+    @ApiProperty()
+    newProductNotification: boolean;
 }

@@ -6,17 +6,23 @@ import { Roles } from 'src/auth/role/roles.decorator';
 import { Role } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 import { OtpGuard } from 'src/otp/otp.guard';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('products')
 @UseGuards(OtpGuard)
 @ApiTags('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post()
   @Roles(Role.ADMIN)
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto) {
+    const product = await this.productsService.create(createProductDto);
+    this.usersService.sendNewProductNotification(product);
+    return product;
   }
 
   @Get()

@@ -13,7 +13,9 @@ import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [AuthModule, UsersModule, ProductsModule,
-    CacheModule.register(),
+    CacheModule.register({
+      isGlobal: true,
+    }),
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
