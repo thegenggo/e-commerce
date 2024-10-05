@@ -10,7 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
@@ -21,8 +21,31 @@ import { FacebookOauthGuard } from './guards/facebook-oauth.guard';
 import { Public } from './auth.decorator';
 
 @Controller('auth')
+@ApiTags('Authentication')
 export class AuthController {
   constructor(private authService: AuthService) {}
+  @HttpCode(HttpStatus.OK)
+  @Post('register')
+  @Public()
+  @ApiCreatedResponse({ type: UserEntity })
+  signUp(@Body() signUpDto: SignUpDto) {
+    return this.authService.signUp(signUpDto.email, signUpDto.username, signUpDto.password);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  @Public()
+  @ApiOkResponse({ type: UserEntity })
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto.username, signInDto.password);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('change-password')
+  @ApiOkResponse({ type: UserEntity })
+  changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
+    return this.authService.changePassword(req.user.sub, changePasswordDto.password);
+  }
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
@@ -65,33 +88,5 @@ export class AuthController {
     console.log(token);
 
     return token;
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('register')
-  @Public()
-  @ApiCreatedResponse({ type: UserEntity })
-  signUp(@Body() signUpDto: SignUpDto) {
-    return this.authService.signUp(signUpDto.email, signUpDto.username, signUpDto.password);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('login')
-  @Public()
-  @ApiOkResponse({ type: UserEntity })
-  signIn(@Body() signInDto: SignInDto) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('change-password')
-  @ApiOkResponse({ type: UserEntity })
-  changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
-    return this.authService.changePassword(req.user.sub, changePasswordDto.password);
-  }
-
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }

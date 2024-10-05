@@ -4,13 +4,14 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Roles } from 'src/auth/role/roles.decorator';
 import { Role } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { OtpGuard } from 'src/otp/otp.guard';
 import { UsersService } from 'src/users/users.service';
 
 @Controller('products')
 @UseGuards(OtpGuard)
-@ApiTags('products')
+@ApiTags('Products')
+@ApiBearerAuth()
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,

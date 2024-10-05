@@ -1,19 +1,13 @@
-import { BadRequestException, Body, Controller, Get, InternalServerErrorException, Post, Req } from '@nestjs/common';
-import { AppService } from './app.service';
-import { OtpService } from './otp/otp.service';
-import { VerifyOtpDto } from './otp/dto/verify-otp.dto';
+import { Controller, Post, Req, Body, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { OtpService } from './otp.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller()
-export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly otpService: OtpService,
-  ) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+@ApiTags('OTP')
+@ApiBearerAuth()
+export class OtpController {
+  constructor(private readonly otpService: OtpService) {}
 
   @Post('send-otp')
   sendOtp(@Req() req) {

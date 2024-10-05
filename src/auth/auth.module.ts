@@ -13,7 +13,7 @@ import { FacebookStrategy } from './strategies/facebook.strategy';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '2 days' },
     }),
   ],
   controllers: [AuthController],

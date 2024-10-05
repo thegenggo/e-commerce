@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -10,9 +9,10 @@ import { AuthGuard } from './auth/auth.guard';
 import { OtpService } from './otp/otp.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CacheModule } from '@nestjs/cache-manager';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, ProductsModule,
+  imports: [AuthModule, OtpModule, UsersModule, ProductsModule,
     CacheModule.register({
       isGlobal: true,
     }),
@@ -27,8 +27,8 @@ import { CacheModule } from '@nestjs/cache-manager';
         },
       },
     }),
+    OtpModule,
   ],
-  controllers: [AppController],
   providers: [AppService,
     {
       provide: APP_GUARD,
