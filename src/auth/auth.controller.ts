@@ -49,11 +49,13 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
+  @Public()
   async googleAuth() {}
 
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
+  @Public()
   async googleAuthCallback(@Request() req, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.signInOauth(req.user);
 
@@ -76,6 +78,7 @@ export class AuthController {
 
   @Get('facebook/callback')
   @UseGuards(FacebookOauthGuard)
+  @Public()
   async facebookAuthCallback(@Request() req, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.signInOauth(req.user);
 
