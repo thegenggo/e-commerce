@@ -24,7 +24,10 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a mid-term project for ROAD TO BACK-END DEVELOPER BOOTCAMP #2 course.
+
+## API Document
+<a href="http://localhost:3000/api" target="_blank">http://localhost:3000/api<a/>
 
 ## Project setup
 
