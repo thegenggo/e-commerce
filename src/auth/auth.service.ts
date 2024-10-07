@@ -3,6 +3,8 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Prisma, User } from '@prisma/client';
+import { AccessTokenEntity } from './entities/access-token.entity';
+import { NewPasswordEntity } from './entities/new-password.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(email: string, username: string, password: string): Promise<{ access_token: string } | undefined> {
+  async signUp(email: string, username: string, password: string): Promise<AccessTokenEntity | undefined> {
     const isDuplicateEmail = await this.usersService.findOneByEmail(email);
     const isDuplicateUsername = await this.usersService.findOne(username);
 
@@ -22,11 +24,11 @@ export class AuthService {
     const newUser = await this.usersService.createUser(email, username, hashedpassword);
     const payload = { sub: newUser.id, username: newUser.username };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
     };
   }
 
-  async signIn(username: string, password: string): Promise<{ access_token: string }> {
+  async signIn(username: string, password: string): Promise<AccessTokenEntity> {
     const user = await this.usersService.findOne(username);
     if (!user) throw new BadRequestException("Username or password is incorrect.");
 
@@ -38,7 +40,7 @@ export class AuthService {
     const payload = { sub: user.id, username: user.username, role: user.role, email: user.email };
     
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
     };
   }
 
@@ -59,12 +61,9 @@ export class AuthService {
     };
   }
 
-  async changePassword(userId: number, newPassword: string): Promise<{ message: string }> {
-    console.log("New password: ", newPassword);
+  async changePassword(userId: number, newPassword: string): Promise<NewPasswordEntity> {
     const user = await this.usersService.changePassword(userId, await bcrypt.hash(newPassword, 10))
-    console.log("user: ", user);
-    return {
-      message: "Successfully changed password."
-    }
+    
+    return 
   }
 }

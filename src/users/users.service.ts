@@ -44,6 +44,9 @@ export class UsersService {
       data: {
         password: newPassword,
       },
+      select: {
+        password: true,
+      }
     });
   }
 
