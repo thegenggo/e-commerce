@@ -10,8 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -21,13 +20,14 @@ import { FacebookOauthGuard } from './guards/facebook-oauth.guard';
 import { Public } from './auth.decorator';
 import { AccessTokenEntity } from './entities/access-token.entity';
 import { NewPasswordEntity } from './entities/new-password.entity';
+import { NoOtp } from 'src/otp/otp.decorator';
 
 @Controller('auth')
 @ApiTags('Authentication')
+@NoOtp(true)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.CREATED)
   @Post('register')
   @Public()
   @ApiCreatedResponse({ type: AccessTokenEntity, description: "Successfully create new account and return access token." })
@@ -45,8 +45,10 @@ export class AuthController {
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Post('change-password')
+  @NoOtp(false)
   @ApiOkResponse({ type: NewPasswordEntity, description: "Successfully change password." })
   changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
     return this.authService.changePassword(req.user.sub, changePasswordDto.password);

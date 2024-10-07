@@ -1,15 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Roles } from 'src/auth/role/roles.decorator';
 import { Role } from '@prisma/client';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { OtpGuard } from 'src/otp/otp.guard';
 import { UsersService } from 'src/users/users.service';
 
 @Controller('products')
-@UseGuards(OtpGuard)
 @ApiTags('Products')
 @ApiBearerAuth()
 export class ProductsController {

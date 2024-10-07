@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Req, Get, Delete, Param, HttpException, NotFoundException, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Req, Get, Delete, Param, HttpException, NotFoundException, Patch, UseGuards } from '@nestjs/common';
 import { CartsService } from './carts.service';
 import { AddProductToCartDto } from './dto/add-product-to-cart.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { OtpGuard } from 'src/otp/otp.guard';
 
 @Controller('carts')
 @ApiTags('Cart')

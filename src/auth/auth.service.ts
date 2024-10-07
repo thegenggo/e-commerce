@@ -15,7 +15,7 @@ export class AuthService {
 
   async signUp(email: string, username: string, password: string): Promise<AccessTokenEntity | undefined> {
     const isDuplicateEmail = await this.usersService.findOneByEmail(email);
-    const isDuplicateUsername = await this.usersService.findOne(username);
+    const isDuplicateUsername = await this.usersService.findOneByUsername(username);
 
     if(isDuplicateEmail) throw new ConflictException("Duplicate email");
     if(isDuplicateUsername) throw new ConflictException("Duplicate username");
@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   async signIn(username: string, password: string): Promise<AccessTokenEntity> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOneByUsername(username);
     if (!user) throw new BadRequestException("Username or password is incorrect.");
 
     const isPasswordValid = await bcrypt.compare(password, user.password);

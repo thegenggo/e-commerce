@@ -9,11 +9,7 @@ export class OrdersService {
 
   create(createOrderDto: CreateOrderDto) {
     return this.prisma.order.create({
-      data: {
-        orderStatus: createOrderDto.orderStatus,
-        productId: createOrderDto.productId,
-        userId: createOrderDto.userId,
-      }
+      data: createOrderDto,
     });
   }
 
@@ -26,14 +22,17 @@ export class OrdersService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} order`;
+    return this.prisma.order.findUnique({ where: { id } });
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+    return this.prisma.order.update({
+      where: { id },
+      data: updateOrderDto,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} order`;
+    return this.prisma.order.delete({ where: { id } });
   }
 }

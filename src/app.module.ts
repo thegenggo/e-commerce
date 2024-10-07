@@ -13,6 +13,7 @@ import { OtpModule } from './otp/otp.module';
 import { CartsModule } from './carts/carts.module';
 import { CheckoutModule } from './checkout/checkout.module';
 import { OrdersModule } from './orders/orders.module';
+import { OtpGuard } from './otp/otp.guard';
 
 @Module({
   imports: [AuthModule, OtpModule, UsersModule, ProductsModule,
@@ -40,6 +41,11 @@ import { OrdersModule } from './orders/orders.module';
       provide: APP_GUARD,
       useClass: AuthGuard
     },
+    {
+      provide: APP_GUARD,
+      useClass: OtpGuard
+    }
+    ,
     {
       provide: APP_GUARD,
       useClass: RolesGuard
