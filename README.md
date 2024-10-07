@@ -28,8 +28,11 @@
 
 ## Project setup
 
+rename .env.example to .env and fill all environment variables
+
 ```bash
 $ pnpm install
+$ pnpm prisma migrate dev --name init
 ```
 
 ## Compile and run the project
