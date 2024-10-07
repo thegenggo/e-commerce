@@ -54,6 +54,9 @@ export class UsersService {
       },
       data: {
         newProductNotification: state,
+      },
+      select: {
+        newProductNotification: true,
       }
     })
   }

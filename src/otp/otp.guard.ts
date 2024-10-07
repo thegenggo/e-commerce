@@ -4,7 +4,7 @@ import { Injectable, CanActivate, ExecutionContext, Inject, BadRequestException 
 
 @Injectable()
 export class OtpGuard implements CanActivate {
-  private activate: boolean = true;
+  private activate: boolean = false;
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}

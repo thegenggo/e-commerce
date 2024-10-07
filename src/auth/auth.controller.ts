@@ -10,7 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
@@ -19,6 +19,7 @@ import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
 import { FacebookOauthGuard } from './guards/facebook-oauth.guard';
 import { Public } from './auth.decorator';
+import { AccessTokenEntity } from './entities/access-token.entity';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -27,7 +28,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('register')
   @Public()
-  @ApiCreatedResponse({ type: UserEntity })
+  @ApiCreatedResponse({ type: AccessTokenEntity ,description: "Register new account by using email, username and password and return access token." })
+  @ApiConflictResponse({ description: "Already have this username or email in the system." })
   signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto.email, signUpDto.username, signUpDto.password);
   }
@@ -35,7 +37,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @Public()
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse()
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto.username, signInDto.password);
   }

@@ -12,18 +12,18 @@ export class AuthService {
   ) {}
 
   async signUp(email: string, username: string, password: string): Promise<{ access_token: string } | undefined> {
-    const existingUser = await this.usersService.findOne(username);
+    const isDuplicateEmail = await this.usersService.findOneByEmail(email);
+    const isDuplicateUsername = await this.usersService.findOne(username);
+
+    if(isDuplicateEmail) throw new ConflictException("Duplicate email");
+    if(isDuplicateUsername) throw new ConflictException("Duplicate username");
     
-    if(existingUser) {
-      throw new ConflictException("User already exists. Please login.");
-    } else {
-      const hashedpassword = await bcrypt.hash(password, 10);
-      const newUser = await this.usersService.createUser(email, username, hashedpassword);
-      const payload = { sub: newUser.id, username: newUser.username };
-      return {
-        access_token: await this.jwtService.signAsync(payload),
-      };
-    }
+    const hashedpassword = await bcrypt.hash(password, 10);
+    const newUser = await this.usersService.createUser(email, username, hashedpassword);
+    const payload = { sub: newUser.id, username: newUser.username };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 
   async signIn(username: string, password: string): Promise<{ access_token: string }> {

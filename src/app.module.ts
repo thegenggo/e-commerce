@@ -11,6 +11,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { CacheModule } from '@nestjs/cache-manager';
 import { OtpModule } from './otp/otp.module';
 import { CartsModule } from './carts/carts.module';
+import { CheckoutModule } from './checkout/checkout.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [AuthModule, OtpModule, UsersModule, ProductsModule,
@@ -30,6 +32,8 @@ import { CartsModule } from './carts/carts.module';
     }),
     OtpModule,
     CartsModule,
+    CheckoutModule,
+    OrdersModule,
   ],
   providers: [AppService,
     {
