@@ -4,6 +4,7 @@ import { Injectable, CanActivate, ExecutionContext, Inject, BadRequestException 
 
 @Injectable()
 export class OtpGuard implements CanActivate {
+  private activate: boolean = true;
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
@@ -11,6 +12,7 @@ export class OtpGuard implements CanActivate {
   async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
+    if (!this.activate) return true;
     const request = context.switchToHttp().getRequest();
     const user = request['user'];
     const session: { status: boolean, exp: number  } = await this.cacheManager.get(`session:${user.sub}`);

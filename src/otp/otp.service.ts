@@ -70,7 +70,6 @@ export class OtpService {
             encoding: "base32",
             token: otp,
             step: 300,
-            window: 2,
         });
 
         if(isVerified) {

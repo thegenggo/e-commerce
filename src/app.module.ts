@@ -10,6 +10,7 @@ import { OtpService } from './otp/otp.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CacheModule } from '@nestjs/cache-manager';
 import { OtpModule } from './otp/otp.module';
+import { CartsModule } from './carts/carts.module';
 
 @Module({
   imports: [AuthModule, OtpModule, UsersModule, ProductsModule,
@@ -28,6 +29,7 @@ import { OtpModule } from './otp/otp.module';
       },
     }),
     OtpModule,
+    CartsModule,
   ],
   providers: [AppService,
     {
